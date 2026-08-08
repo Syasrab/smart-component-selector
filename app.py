@@ -43,11 +43,11 @@ st.set_page_config(page_title="Smart Component Selector", page_icon="🔧", layo
 
 COPPER = "#C6803D"
 COPPER_BRIGHT = "#E2A65C"
-BG = "#0E1F1A"
-SURFACE = "#152A20"
-TRACE_LINE = "#2C4A3A"
+BG = "#0B0E0D"
+SURFACE = "#141917"
+TRACE_LINE = "#2A322D"
 TEXT = "#EDEDE3"
-TEXT_MUTED = "#9FB3A8"
+TEXT_MUTED = "#8F9C96"
 GOOD = "#7FBF6A"
 WARN = "#C1543A"
 
