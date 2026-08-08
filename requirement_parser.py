@@ -30,7 +30,10 @@ hobbyist modules. If the text names a reference part (e.g. "TP4057" or "nRF52832
 close variant as the keyword.
 
 Guidance for category: keep it short, unique, and descriptive (e.g. "microcontroller_ble", \
-"pir_motion_sensor", "lipo_charger_ic")."""
+"pir_motion_sensor", "lipo_charger_ic"). Reuse these exact category names when they fit, so \
+repeated runs stay consistent: microcontroller_wifi, microcontroller_ble, voltage_regulator_3v3, \
+status_led, solar_charger_ic, battery_fuel_gauge, soil_moisture_sensor, solenoid_driver_mosfet, \
+flyback_diode, waterproof_connector. Only invent a new category name if none of these fit."""
 
 
 def parse_requirements(prompt_text, client=None, max_retries=3):

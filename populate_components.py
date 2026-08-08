@@ -1,5 +1,8 @@
-from digikey_client import search_by_keyword
-from components_db import init_db, insert_components, save_categories, get_categories
+from digikey_client import search_by_keyword, broaden_keyword
+from components_db import (
+    init_db, insert_components, save_categories, get_categories,
+    get_cached_results, cache_results,
+)
 
 # Fallback example categories (the original Janibe crib-monitor project) - used only
 # if you run this file directly without going through run_pipeline.py first.
@@ -30,6 +33,42 @@ EXAMPLE_CATEGORIES = [
 ]
 
 
+def _cached_search(keyword, record_count=5):
+    """Check the local cache before hitting the DigiKey API. Cache entries
+    expire after 24 hours."""
+    cached = get_cached_results(keyword)
+    if cached is not None:
+        print(f"  (cache hit for '{keyword}')")
+        return cached
+    results = search_by_keyword(keyword, record_count=record_count)
+    cache_results(keyword, results)
+    return results
+
+
+def _search_with_fallback(search_keyword, category, record_count=5):
+    """Try the AI-generated keyword first. If it returns zero results
+    (common when the keyword names an exact part number DigiKey doesn't
+    stock, or is too narrow), retry with progressively broader terms."""
+    attempts = [search_keyword]
+
+    broadened = broaden_keyword(search_keyword)
+    if broadened and broadened.lower() != search_keyword.lower():
+        attempts.append(broadened)
+
+    generic = category.replace("_", " ")
+    if generic.lower() not in [a.lower() for a in attempts]:
+        attempts.append(generic)
+
+    for i, attempt in enumerate(attempts):
+        results = _cached_search(attempt, record_count=record_count)
+        if results:
+            if i > 0:
+                print(f"  No results for original keyword - broadened to '{attempt}' -> {len(results)} results.")
+            return results
+
+    return []
+
+
 def populate_from_categories(categories, record_count=5):
     """categories: list of dicts with keys category, search_keyword, requirement."""
     init_db()
@@ -37,7 +76,7 @@ def populate_from_categories(categories, record_count=5):
     for c in categories:
         print(f"Searching DigiKey for '{c['search_keyword']}' -> category '{c['category']}'...")
         try:
-            parts = search_by_keyword(c["search_keyword"], record_count=record_count)
+            parts = _search_with_fallback(c["search_keyword"], c["category"], record_count=record_count)
         except Exception as e:
             print(f"  Failed: {e}")
             continue

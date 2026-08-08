@@ -1,0 +1,40 @@
+Smart Garden Irrigation Controller
+
+The device automates watering for a small home garden using soil moisture
+sensing and local weather awareness, running outdoors on solar + battery
+power with no wired mains connection.
+
+Requirements:
+
+- Microcontroller: Low-power 32-bit MCU with built-in Wi-Fi, needed to
+  check local rain forecast via API and log watering history to a home
+  server. Deep sleep current should be minimal since the device wakes only
+  briefly every 15 minutes to check sensors.
+
+- Soil moisture sensor: Capacitive (not resistive, to avoid corrosion),
+  analog output, suitable for direct burial in soil, low power.
+
+- Water flow sensor: Inline pulse-output flow sensor to measure how much
+  water is dispensed per watering cycle, standard 1/2 inch pipe fitting.
+
+- Solenoid valve driver: MOSFET or driver IC capable of switching a
+  12V DC solenoid valve from a 3.3V logic signal, with flyback protection
+  for the valve's inductive coil.
+
+- Battery and solar: Single-cell 18650 Li-ion battery, charged by a small
+  solar panel through a solar-optimized charge controller. Needs a fuel
+  gauge or simple voltage divider to estimate remaining battery percentage.
+
+- Voltage regulator: Efficient buck converter or LDO to supply 3.3V logic
+  from the battery, minimal quiescent current for long battery life
+  between charges.
+
+- Status LED: Single RGB or bi-color LED to indicate system status
+  (watering active, low battery, Wi-Fi connected).
+
+- Weatherproof enclosure connector: Cable gland or waterproof connector
+  for the soil sensor and valve wiring passing through the enclosure wall.
+
+Cost-sensitive - this is a DIY/hobbyist-tier product, target BOM under
+$25 per unit at low volume. Prefer widely-available, well-documented parts
+over exotic or hard-to-source components.
